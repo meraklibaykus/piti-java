@@ -1,7 +1,11 @@
-import java.util.*;
+import java.util.Map;
 
-public class PitiInterpreter extends PitiBaseVisitor<Integer> {
-    private Map<String, Integer> variables = new HashMap<>();
+public class PitiInterpreterVisitor extends PitiBaseVisitor<Integer> {
+    private final Map<String, Integer> variables;
+
+    public PitiInterpreterVisitor(Map<String, Integer> variables) {
+        this.variables = variables;
+    }
 
     @Override
     public Integer visitAssign(PitiParser.AssignContext ctx) {
@@ -61,17 +65,5 @@ public class PitiInterpreter extends PitiBaseVisitor<Integer> {
             throw new RuntimeException("Division by zero");
         }
         return left / right;
-    }
-
-    public static void main(String[] args) {
-        String input = "x = 3 + 4\n" +
-                       "print x * 2\n";
-
-        PitiLexer lexer = new PitiLexer(CharStreams.fromString(input));
-        PitiParser parser = new PitiParser(new CommonTokenStream(lexer));
-        ParseTree tree = parser.program();
-
-        PitiInterpreter interpreter = new PitiInterpreter();
-        interpreter.visit(tree);
     }
 }
