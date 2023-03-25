@@ -1,19 +1,22 @@
-ublic static void main(String[] args) {
-    if (args.length == 0) {
-        System.out.println("Usage: java PitiInterpreter <filename>");
-        System.exit(1);
-    }
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.*;
 
-    try {
-        String input = new String(Files.readAllBytes(Paths.get(args[0])), StandardCharsets.UTF_8);
-        PitiLexer lexer = new PitiLexer(CharStreams.fromString(input));
-        PitiParser parser = new PitiParser(new CommonTokenStream(lexer));
+public class PitiInterpreter {
+    private static final Map<String, Integer> variables = new HashMap<>();
+
+    public static void main(String[] args) {
+        String input = "deger x = 5;\n" +
+                "deger y = 3;\n" +
+                "deger z = x + y;\n" +
+                "yazdir z;";
+
+        ANTLRInputStream inputStream = new ANTLRInputStream(input);
+        PitiLexer lexer = new PitiLexer(inputStream);
+        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+        PitiParser parser = new PitiParser(tokenStream);
         ParseTree tree = parser.program();
 
-        PitiInterpreter interpreter = new PitiInterpreter();
-        interpreter.visit(tree);
-    } catch (IOException e) {
-        System.err.println("Error: " + e.getMessage());
-        System.exit(1);
+        PitiInterpreterVisitor visitor = new PitiInterpreterVisitor(variables);
+        visitor.visit(tree);
     }
 }
