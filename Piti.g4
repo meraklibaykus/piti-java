@@ -4,7 +4,8 @@ grammar Piti;
 
 INT: '-'? [0-9]+; // integer
 FLOAT: '-'? [0-9]+ '.' [0-9]* | '-'? '.' [0-9]+; // float
-BOOL: 'true' | 'false'; // boolean
+TRUE: 'true'; // boolean true
+FALSE: 'false'; // boolean false
 ID: [a-zA-Z]+; // identifier
 WS: [ \t\r\n]+ -> skip; // whitespace
 
@@ -63,7 +64,8 @@ factor: (PLUS | MINUS) factor
 
 primary: INT
        | FLOAT
-       | BOOL
+       | TRUE
+       | FALSE
        | ID
        | LPAREN expression RPAREN
        ;
